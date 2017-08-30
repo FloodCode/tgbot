@@ -4,42 +4,54 @@ import (
   "time"
 )
 
-var apiUrl = ""
-var poolDelay = 300
-var lastUpdateId int = -1
-var updatesCallback = func([]Update) { }
-
-func SetAPIKey(key string) {
-  apiUrl = "https://api.telegram.org/bot" + key + "/"
+type Bot struct {
+  apiKey string
+  poolDelay int
+  lastUpdateId int
+  updatesCallback func([]Update)
 }
 
-func SetPoolDelay(delay int) {
-  poolDelay = delay
+func New(apiKey string) Bot {
+  var bot = Bot{
+    apiKey: apiKey,
+    poolDelay: 100,
+    lastUpdateId: -1,
+    updatesCallback: func([]Update) { },
+  }
+  return bot
 }
 
-func SetUpdatesCallback(callback func([]Update)) {
-  updatesCallback = callback
+func (b *Bot) SetPoolDelay(delay int) {
+  b.poolDelay = delay
 }
 
-func Poll() {
+func (b *Bot) SetUpdatesCallback(callback func([]Update)) {
+  b.updatesCallback = callback
+}
+
+func (b *Bot) Poll() {
   for true {
-    var updates, err = GetUpdates(ParamsGetUpdates{Offset: lastUpdateId + 1})
+    var updates, err = b.GetUpdates(ParamsGetUpdates{Offset: b.lastUpdateId + 1})
     if err == nil && len(updates) != 0 {
       var lastUpdate = updates[len(updates) - 1]
-      updatesCallback(updates)
-      lastUpdateId = lastUpdate.UpdateId
+      b.updatesCallback(updates)
+      b.lastUpdateId = lastUpdate.UpdateId
     }
 
-    time.Sleep(time.Duration(poolDelay) * time.Millisecond)
+    time.Sleep(time.Duration(b.poolDelay) * time.Millisecond)
   }
 }
 
-func GetUpdates(params ParamsGetUpdates) (updates []Update, err error) {
-  err = sendResuest("getUpdates", params, &updates)
+func (b Bot) GetUpdates(params ParamsGetUpdates) (updates []Update, err error) {
+  err = b.sendResuest("getUpdates", params, &updates)
   return updates, err
 }
 
-func SendMessage(params ParamsSendMessage) (message Message, err error) {
-  err = sendResuest("sendMessage", params, &message)
+func (b Bot) SendMessage(params ParamsSendMessage) (message Message, err error) {
+  err = b.sendResuest("sendMessage", params, &message)
   return message, err
+}
+
+func (b Bot) sendResuest(method string, paramsObject interface{}, t interface{}) error {
+  return sendResuest(method, b.apiKey, paramsObject, &t)
 }

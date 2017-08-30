@@ -13,7 +13,7 @@ import (
 
 var httpClient = &http.Client{}
 
-func sendResuest(method string, paramsObject interface{}, t interface{}) error {
+func sendResuest(method string, apiKey string, paramsObject interface{}, t interface{}) error {
   parameters, err := extractParams(paramsObject)
   if err != nil {
     logRequestError(err, method, paramsObject)
@@ -38,7 +38,7 @@ func sendResuest(method string, paramsObject interface{}, t interface{}) error {
 
   writer.Close()
 
-  request, err := http.NewRequest("POST", apiUrl + method, &requestBytes)
+  request, err := http.NewRequest("POST", "https://api.telegram.org/bot" + apiKey + "/" + method, &requestBytes)
   if err != nil {
     return errors.New("Unable to create request with given parameters")
   }
