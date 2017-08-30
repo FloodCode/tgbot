@@ -42,6 +42,11 @@ func (b *Bot) Poll() {
   }
 }
 
+func (b Bot) GetMe() (me User, err error) {
+  err = b.sendResuest("getme", nil, &me)
+  return me, err
+}
+
 func (b Bot) GetUpdates(params ParamsGetUpdates) (updates []Update, err error) {
   err = b.sendResuest("getUpdates", params, &updates)
   return updates, err
@@ -49,6 +54,16 @@ func (b Bot) GetUpdates(params ParamsGetUpdates) (updates []Update, err error) {
 
 func (b Bot) SendMessage(params ParamsSendMessage) (message Message, err error) {
   err = b.sendResuest("sendMessage", params, &message)
+  return message, err
+}
+
+func (b Bot) ForwardMessage(params ParamsForwardMessage) (message Message, err error) {
+  err = b.sendResuest("forwardMessage", params, &message)
+  return message, err
+}
+
+func (b Bot) SendPhoto(params ParamsSendPhoto) (message Message, err error) {
+  err = b.sendResuest("sendPhoto", params, &message)
   return message, err
 }
 

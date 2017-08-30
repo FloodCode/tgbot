@@ -14,15 +14,26 @@ import (
 var httpClient = &http.Client{}
 
 func sendResuest(method string, apiKey string, paramsObject interface{}, t interface{}) error {
-  parameters, err := extractParams(paramsObject)
+  err := _sendResuest(method, apiKey, paramsObject, t)
   if err != nil {
     logRequestError(err, method, paramsObject)
-    return err
   }
+
+  return err
+}
+
+func _sendResuest(method string, apiKey string, paramsObject interface{}, t interface{}) error {
+  parameters, err := extractParams(paramsObject)
 
   var requestBytes bytes.Buffer
   var writer = multipart.NewWriter(&requestBytes)
   var withParameters bool = false
+
+  var addFileParameter = func(key string, value []byte) {
+    writer, _ := writer.CreateFormFile(key, "file")
+    writer.Write(value)
+    withParameters = true
+  }
 
   var addStringParameter = func(key string, value string) {
     writer, _ := writer.CreateFormField(key)
@@ -31,8 +42,10 @@ func sendResuest(method string, apiKey string, paramsObject interface{}, t inter
   }
 
   for key, value := range parameters {
-    if v, ok := value.(string); ok {
-      addStringParameter(key, v)
+    if param, ok := value.(string); ok {
+      addStringParameter(key, param)
+    } else if param, ok := value.([]byte); ok {
+      addFileParameter(key, param)
     }
   }
 
@@ -54,10 +67,6 @@ func sendResuest(method string, apiKey string, paramsObject interface{}, t inter
 
   defer response.Body.Close()
 
-  if response.StatusCode != http.StatusOK {
-    return errors.New("Response status code is not OK")
-  }
-
   body, err := ioutil.ReadAll(response.Body)
   if err != nil {
     return errors.New("Unable to read response body")
@@ -70,7 +79,7 @@ func sendResuest(method string, apiKey string, paramsObject interface{}, t inter
   }
 
   if apiResponse.Ok != true {
-    return errors.New("API request error")
+    return errors.New("API request error. Description: " + apiResponse.Description)
   }
 
   err = json.Unmarshal(apiResponse.Result, &t)
@@ -82,24 +91,31 @@ func sendResuest(method string, apiKey string, paramsObject interface{}, t inter
 }
 
 func extractParams(paramsObject interface{}) (map[string]interface{}, error) {
+  var result = map[string]interface{}{}
+
+  if paramsObject == nil {
+    return result, nil
+  }
+
   reflectType := reflect.TypeOf(paramsObject)
   reflectValue := reflect.ValueOf(paramsObject)
-
-  var result = map[string]interface{}{}
 
   for i := 0; i < reflectType.NumField(); i++ {
     field := reflectType.Field(i)
     option := field.Tag.Get("option")
-    var extractedValue string = ""
 
+    var extractedValue interface{} = nil
     switch v := reflectValue.FieldByName(field.Name).Interface().(type) {
-    case int:             if v != 0     { extractedValue = strconv.FormatInt(int64(v), 10)}
-    case string:          if len(v) > 0 { extractedValue = v }
-    case *ChatIdentifier: if v != nil   { extractedValue = v.Get() }
-    case *ParseMode:      if v != nil   { extractedValue = v.Get() }
+      case bool:            if v          { extractedValue = "true" }
+      case int:             if v != 0     { extractedValue = strconv.FormatInt(int64(v), 10) }
+      case int64:           if v != 0     { extractedValue = strconv.FormatInt(v, 10) }
+      case string:          if len(v) > 0 { extractedValue = v }
+      case *ChatIdentifier: if v != nil   { extractedValue = v.Get() }
+      case *ParseMode:      if v != nil   { extractedValue = v.Get() }
+      case *InputFile:      if v != nil   { extractedValue = v.Get() }
     }
 
-    if len(extractedValue) > 0 {
+    if extractedValue != nil {
       result[option] = extractedValue
     } else if len(field.Tag.Get("required")) != 0 {
       return result, errors.New("Missing required option (" + option + ")")
