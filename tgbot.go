@@ -67,6 +67,36 @@ func (b Bot) SendPhoto(params ParamsSendPhoto) (message Message, err error) {
   return message, err
 }
 
+func (b Bot) SendAudio(params ParamsSendAudio) (message Message, err error) {
+  err = b.sendResuest("sendAudio", params, &message)
+  return message, err
+}
+
+func (b Bot) SendDocument(params ParamsSendDocument) (message Message, err error) {
+  err = b.sendResuest("sendDocument", params, &message)
+  return message, err
+}
+
+func (b Bot) SendVideo(params ParamsSendVideo) (message Message, err error) {
+  err = b.sendResuest("sendVideo", params, &message)
+  return message, err
+}
+
+func (b Bot) SendVoice(params ParamsSendVoice) (message Message, err error) {
+  err = b.sendResuest("sendVoice", params, &message)
+  return message, err
+}
+
+func (b Bot) SendVideoNote(params ParamsSendVideoNote) (message Message, err error) {
+  err = b.sendResuest("sendVideoNote", params, &message)
+  return message, err
+}
+
+func (b Bot) SendLocation(params ParamsSendLocation) (message Message, err error) {
+    err = b.sendResuest("sendLocation", params, &message)
+    return message, err
+}
+
 func (b Bot) sendResuest(method string, paramsObject interface{}, t interface{}) error {
   return sendResuest(method, b.apiKey, paramsObject, &t)
 }

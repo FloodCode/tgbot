@@ -4,6 +4,7 @@ import (
   "strconv"
   "strings"
   "io/ioutil"
+  "path/filepath"
 )
 
 // API method option ChatIdentifier
@@ -57,23 +58,36 @@ type ReplyMarkup struct {
 
 type InputFile struct {
   fileData interface{}
+  filename string
 }
 
 func (f *InputFile) Get() interface{} {
   return f.fileData
 }
 
+func (f *InputFile) GetBytes() []byte {
+  if v, ok := f.fileData.([]byte); ok {
+    return v
+  } else {
+    return []byte{}
+  }
+}
+
+func (f *InputFile) GetFilename() string {
+  return f.filename
+}
+
 func FileId(fileId string) *InputFile {
   return &InputFile{fileData: fileId}
 }
 
-func FileBytes(fileData []byte) *InputFile {
-  return &InputFile{fileData: fileData}
+func FileBytes(fileData []byte, filename string) *InputFile {
+  return &InputFile{fileData: fileData, filename: filename}
 }
 
 func FilePath(filePath string) *InputFile {
   bytes, _ := ioutil.ReadFile(filePath)
-  return &InputFile{fileData: bytes}
+  return &InputFile{fileData: bytes, filename: filepath.Base(filePath)}
 }
 
 // API method parameters
@@ -102,9 +116,72 @@ type ParamsForwardMessage struct {
 }
 
 type ParamsSendPhoto struct {
-  ChatId                *ChatIdentifier `option:"chat_id" required:"true"`
-  Photo                 *InputFile      `option:"photo"   required:"true"`
+  ChatId                *ChatIdentifier `option:"chat_id"                   required:"true"`
+  Photo                 *InputFile      `option:"photo"                     required:"true"`
   Caption               string          `option:"caption"`
+  DisableNotification   bool            `option:"disable_notification"`
+  ReplyToMessageId      int             `option:"reply_to_message_id"`
+  ReplyMarkup           *ReplyMarkup    `option:"reply_markup"`
+}
+
+type ParamsSendAudio struct {
+  ChatId                *ChatIdentifier `option:"chat_id"                   required:"true"`
+  Audio                 *InputFile      `option:"audio"                     required:"true"`
+  Caption               string          `option:"caption"`
+  Duration              int             `option:"duration"`
+  Performer             string          `option:"performer"`
+  Title                 string          `option:"title"`
+  DisableNotification   bool            `option:"disable_notification"`
+  ReplyToMessageId      int             `option:"reply_to_message_id"`
+  ReplyMarkup           *ReplyMarkup    `option:"reply_markup"`
+}
+
+type ParamsSendDocument struct {
+  ChatId                *ChatIdentifier `option:"chat_id"                   required:"true"`
+  Document              *InputFile      `option:"document"                  required:"true"`
+  Caption               string          `option:"caption"`
+  DisableNotification   bool            `option:"disable_notification"`
+  ReplyToMessageId      int             `option:"reply_to_message_id"`
+  ReplyMarkup           *ReplyMarkup    `option:"reply_markup"`
+}
+
+type ParamsSendVideo struct {
+  ChatId                *ChatIdentifier `option:"chat_id"                   required:"true"`
+  Video                 *InputFile      `option:"video"                     required:"true"`
+  Duration              int             `option:"duration"`
+  Width                 int             `option:"width"`
+  Height                int             `option:"height"`
+  Caption               string          `option:"caption"`
+  DisableNotification   bool            `option:"disable_notification"`
+  ReplyToMessageId      int             `option:"reply_to_message_id"`
+  ReplyMarkup           *ReplyMarkup    `option:"reply_markup"`
+}
+
+type ParamsSendVoice struct {
+  ChatId                *ChatIdentifier `option:"chat_id"                   required:"true"`
+  Voice                 *InputFile      `option:"voice"                     required:"true"`
+  Duration              int             `option:"duration"`
+  Caption               string          `option:"caption"`
+  DisableNotification   bool            `option:"disable_notification"`
+  ReplyToMessageId      int             `option:"reply_to_message_id"`
+  ReplyMarkup           *ReplyMarkup    `option:"reply_markup"`
+}
+
+type ParamsSendVideoNote struct {
+  ChatId                *ChatIdentifier `option:"chat_id"                   required:"true"`
+  VideoNote             *InputFile      `option:"video_note"                required:"true"`
+  Duration              int             `option:"duration"`
+  Length                int             `option:"length"`
+  Caption               string          `option:"caption"`
+  DisableNotification   bool            `option:"disable_notification"`
+  ReplyToMessageId      int             `option:"reply_to_message_id"`
+  ReplyMarkup           *ReplyMarkup    `option:"reply_markup"`
+}
+
+type ParamsSendLocation struct {
+  ChatId                *ChatIdentifier `option:"chat_id"                   required:"true"`
+  Latitude              float64         `option:"latitude"                  required:"true"`
+  Longitude             float64         `option:"longitude"                 required:"true"`
   DisableNotification   bool            `option:"disable_notification"`
   ReplyToMessageId      int             `option:"reply_to_message_id"`
   ReplyMarkup           *ReplyMarkup    `option:"reply_markup"`

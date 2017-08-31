@@ -29,8 +29,8 @@ func _sendResuest(method string, apiKey string, paramsObject interface{}, t inte
   var writer = multipart.NewWriter(&requestBytes)
   var withParameters bool = false
 
-  var addFileParameter = func(key string, value []byte) {
-    writer, _ := writer.CreateFormFile(key, "file")
+  var addFileParameter = func(key string, value []byte, filename string) {
+    writer, _ := writer.CreateFormFile(key, filename)
     writer.Write(value)
     withParameters = true
   }
@@ -44,8 +44,15 @@ func _sendResuest(method string, apiKey string, paramsObject interface{}, t inte
   for key, value := range parameters {
     if param, ok := value.(string); ok {
       addStringParameter(key, param)
+    } else if param, ok := value.(*InputFile); ok {
+      fileData := param.Get()
+      if stringData, ok := fileData.(string); ok {
+        addStringParameter(key, stringData)
+      } else if bytesData, ok := fileData.([]byte); ok {
+        addFileParameter(key, bytesData, param.GetFilename())
+      }
     } else if param, ok := value.([]byte); ok {
-      addFileParameter(key, param)
+      addFileParameter(key, param, "file")
     }
   }
 
@@ -109,10 +116,11 @@ func extractParams(paramsObject interface{}) (map[string]interface{}, error) {
       case bool:            if v          { extractedValue = "true" }
       case int:             if v != 0     { extractedValue = strconv.FormatInt(int64(v), 10) }
       case int64:           if v != 0     { extractedValue = strconv.FormatInt(v, 10) }
+      case float64:         if v != 0     { extractedValue = strconv.FormatFloat(v, 'f', 6, 64) }
       case string:          if len(v) > 0 { extractedValue = v }
       case *ChatIdentifier: if v != nil   { extractedValue = v.Get() }
       case *ParseMode:      if v != nil   { extractedValue = v.Get() }
-      case *InputFile:      if v != nil   { extractedValue = v.Get() }
+      case *InputFile:      if v != nil   { extractedValue = v }
     }
 
     if extractedValue != nil {
