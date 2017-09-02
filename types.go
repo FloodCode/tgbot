@@ -1,15 +1,8 @@
 package tgbot
 
-import (
-	"encoding/json"
-)
+import "encoding/json"
 
-type APIResponse struct {
-	Ok          bool            `json:"ok"`
-	Result      json.RawMessage `json:"result"`
-	Description string          `json:"description"`
-}
-
+// Update represents an incoming update.
 type Update struct {
 	UpdateID          int      `json:"update_id"`
 	Message           *Message `json:"message"`
@@ -18,6 +11,7 @@ type Update struct {
 	EditedChannelPost *Message `json:"edited_channel_post"`
 }
 
+// Message represents a message.
 type Message struct {
 	MessageID             int                `json:"message_id"`
 	From                  *User              `json:"from"`
@@ -60,6 +54,7 @@ type Message struct {
 	SuccessfulPayment     *SuccessfulPayment `json:"successful_payment"`
 }
 
+// User represents a user.
 type User struct {
 	ID           int    `json:"id"`
 	IsBot        bool   `json:"is_bot"`
@@ -69,6 +64,7 @@ type User struct {
 	LanguageCode string `json:"language_code"`
 }
 
+// Chat represents a chat.
 type Chat struct {
 	ID                          int64      `json:"id"`
 	Type                        string     `json:"type"`
@@ -83,11 +79,13 @@ type Chat struct {
 	PinnedMessage               *Message   `json:"pinned_message"`
 }
 
+// ChatPhoto represents a chat photo.
 type ChatPhoto struct {
 	SmallFileID string `json:"small_file_id"`
 	BigFileID   string `json:"big_file_id"`
 }
 
+// MessageEntity represents one special entity in a text message. For example, hashtags, usernames, URLs, etc.
 type MessageEntity struct {
 	Type   string `json:"type"`
 	Offset int    `json:"offset"`
@@ -96,6 +94,7 @@ type MessageEntity struct {
 	User   *User  `json:"user"`
 }
 
+// Audio represents an audio file to be treated as music by the Telegram clients.
 type Audio struct {
 	FileID    string `json:"file_id"`
 	Duration  int    `json:"duration"`
@@ -105,6 +104,7 @@ type Audio struct {
 	FileSize  int    `json:"file_size"`
 }
 
+// Document represents a general file (as opposed to photos, voice messages and audio files).
 type Document struct {
 	FileID   string     `json:"file_id"`
 	Thumb    *PhotoSize `json:"thumb"`
@@ -113,6 +113,7 @@ type Document struct {
 	FileSize int        `json:"file_size"`
 }
 
+// PhotoSize represents one size of a photo or a file / sticker thumbnail.
 type PhotoSize struct {
 	FileID   string `json:"file_id"`
 	Width    int    `json:"width"`
@@ -120,6 +121,8 @@ type PhotoSize struct {
 	FileSize int    `json:"file_size"`
 }
 
+// Game represents a game.
+// Use BotFather to create and edit games, their short names will act as unique identifiers.
 type Game struct {
 	Title        string           `json:"title"`
 	Description  string           `json:"description"`
@@ -129,6 +132,7 @@ type Game struct {
 	Animation    *Animation       `json:"animation"`
 }
 
+// Animation represents an animation file to be displayed in the message containing a game.
 type Animation struct {
 	FileID   string     `json:"file_id"`
 	Thumb    *PhotoSize `json:"thumb"`
@@ -137,6 +141,7 @@ type Animation struct {
 	FileSize int        `json:"file_size"`
 }
 
+// Sticker represents a sticker.
 type Sticker struct {
 	FileID       string        `json:"file_id"`
 	Width        int           `json:"width"`
@@ -148,6 +153,7 @@ type Sticker struct {
 	FileSize     int           `json:"file_size"`
 }
 
+// MaskPosition describes the position on faces where a mask should be placed by default.
 type MaskPosition struct {
 	Point  string  `json:"point"`
 	XShift float32 `json:"x_shift"`
@@ -155,6 +161,7 @@ type MaskPosition struct {
 	Scale  float32 `json:"scale"`
 }
 
+// Video represents a video file.
 type Video struct {
 	FileID   string     `json:"file_id"`
 	Width    int        `json:"width"`
@@ -165,6 +172,7 @@ type Video struct {
 	FileSize int        `json:"file_size"`
 }
 
+// Voice represents a voice note.
 type Voice struct {
 	FileID   string `json:"file_id"`
 	Duration int    `json:"duration"`
@@ -172,6 +180,7 @@ type Voice struct {
 	FileSize int    `json:"file_size"`
 }
 
+// VideoNote represents a video message.
 type VideoNote struct {
 	FileID   string     `json:"file_id"`
 	Length   int        `json:"length"`
@@ -180,6 +189,7 @@ type VideoNote struct {
 	FileSize int        `json:"file_size"`
 }
 
+// Contact represents a phone contact.
 type Contact struct {
 	PhoneNumber string `json:"phone_number"`
 	FirstName   string `json:"first_name"`
@@ -187,11 +197,13 @@ type Contact struct {
 	UserID      int    `json:"user_id"`
 }
 
+// Location represents a point on the map.
 type Location struct {
 	Longitude float32 `json:"longitude"`
 	Latitude  float32 `json:"latitude"`
 }
 
+// Venue represents a venue.
 type Venue struct {
 	Location     *Location `json:"location"`
 	Title        string    `json:"title"`
@@ -199,6 +211,7 @@ type Venue struct {
 	FoursquareID string    `json:"foursquare_id"`
 }
 
+// Invoice contains basic information about a invoice.
 type Invoice struct {
 	Title          string `json:"title"`
 	Description    string `json:"description"`
@@ -207,6 +220,7 @@ type Invoice struct {
 	TotalAmount    int    `json:"total_amount"`
 }
 
+// SuccessfulPayment contains basic information about a successful payment.
 type SuccessfulPayment struct {
 	Currency                string     `json:"currency"`
 	TotalAmount             int        `json:"total_amount"`
@@ -217,6 +231,7 @@ type SuccessfulPayment struct {
 	ProviderPaymentChargeID string     `json:"provider_payment_charge_id"`
 }
 
+// OrderInfo represents information about an order.
 type OrderInfo struct {
 	Name            string           `json:"name"`
 	PhoneNumber     string           `json:"phone_number"`
@@ -224,6 +239,7 @@ type OrderInfo struct {
 	ShippingAddress *ShippingAddress `json:"shipping_address"`
 }
 
+// ShippingAddress represents a shipping address.
 type ShippingAddress struct {
 	CountryCode string `json:"country_code"`
 	State       string `json:"state"`
@@ -231,4 +247,10 @@ type ShippingAddress struct {
 	StreetLine1 string `json:"street_line1"`
 	StreetLine2 string `json:"street_line2"`
 	PostCode    string `json:"post_code"`
+}
+
+type apiResponse struct {
+	Ok          bool            `json:"ok"`
+	Result      json.RawMessage `json:"result"`
+	Description string          `json:"description"`
 }

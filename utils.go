@@ -79,7 +79,7 @@ func _sendResuest(method string, apiKey string, paramsObject interface{}, t inte
 		return errors.New("Unable to read response body")
 	}
 
-	var apiResponse = APIResponse{}
+	var apiResponse = apiResponse{}
 	err = json.Unmarshal(body, &apiResponse)
 	if err != nil {
 		return errors.New("Unable to unserialize response from server")

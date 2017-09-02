@@ -4,15 +4,17 @@ import (
 	"time"
 )
 
-type Bot struct {
+// TelegramBot allows to interact with Telegram TelegramBot API.
+type TelegramBot struct {
 	apiKey          string
 	poolDelay       int
 	lastUpdateID    int
 	updatesCallback func([]Update)
 }
 
-func New(apiKey string) Bot {
-	var bot = Bot{
+// New returns a new TelegramBot instance.
+func New(apiKey string) TelegramBot {
+	var bot = TelegramBot{
 		apiKey:          apiKey,
 		poolDelay:       100,
 		lastUpdateID:    -1,
@@ -21,15 +23,18 @@ func New(apiKey string) Bot {
 	return bot
 }
 
-func (b *Bot) SetPoolDelay(delay int) {
+// SetPollDelay used to specify updates polling delay.
+func (b *TelegramBot) SetPollDelay(delay int) {
 	b.poolDelay = delay
 }
 
-func (b *Bot) SetUpdatesCallback(callback func([]Update)) {
+// SetUpdatesCallback used to specify callback for new updates.
+func (b *TelegramBot) SetUpdatesCallback(callback func([]Update)) {
 	b.updatesCallback = callback
 }
 
-func (b *Bot) Poll() {
+// Poll starts updates polling.
+func (b *TelegramBot) Poll() {
 	for true {
 		var updates, err = b.GetUpdates(ParamsGetUpdates{Offset: b.lastUpdateID + 1})
 		if err == nil && len(updates) != 0 {
@@ -42,61 +47,72 @@ func (b *Bot) Poll() {
 	}
 }
 
-func (b Bot) GetMe() (me User, err error) {
+// GetMe returns basic information about the bot.
+func (b TelegramBot) GetMe() (me User, err error) {
 	err = b.sendResuest("getme", nil, &me)
 	return me, err
 }
 
-func (b Bot) GetUpdates(params ParamsGetUpdates) (updates []Update, err error) {
+// GetUpdates allows to get new updates.
+func (b TelegramBot) GetUpdates(params ParamsGetUpdates) (updates []Update, err error) {
 	err = b.sendResuest("getUpdates", params, &updates)
 	return updates, err
 }
 
-func (b Bot) SendMessage(params ParamsSendMessage) (message Message, err error) {
+// SendMessage sends text message.
+func (b TelegramBot) SendMessage(params ParamsSendMessage) (message Message, err error) {
 	err = b.sendResuest("sendMessage", params, &message)
 	return message, err
 }
 
-func (b Bot) ForwardMessage(params ParamsForwardMessage) (message Message, err error) {
+// ForwardMessage re-sends message of any type.
+func (b TelegramBot) ForwardMessage(params ParamsForwardMessage) (message Message, err error) {
 	err = b.sendResuest("forwardMessage", params, &message)
 	return message, err
 }
 
-func (b Bot) SendPhoto(params ParamsSendPhoto) (message Message, err error) {
+// SendPhoto sends photo message.
+func (b TelegramBot) SendPhoto(params ParamsSendPhoto) (message Message, err error) {
 	err = b.sendResuest("sendPhoto", params, &message)
 	return message, err
 }
 
-func (b Bot) SendAudio(params ParamsSendAudio) (message Message, err error) {
+// SendAudio sends audio message.
+func (b TelegramBot) SendAudio(params ParamsSendAudio) (message Message, err error) {
 	err = b.sendResuest("sendAudio", params, &message)
 	return message, err
 }
 
-func (b Bot) SendDocument(params ParamsSendDocument) (message Message, err error) {
+// SendDocument sends document message.
+func (b TelegramBot) SendDocument(params ParamsSendDocument) (message Message, err error) {
 	err = b.sendResuest("sendDocument", params, &message)
 	return message, err
 }
 
-func (b Bot) SendVideo(params ParamsSendVideo) (message Message, err error) {
+// SendVideo sends video message.
+func (b TelegramBot) SendVideo(params ParamsSendVideo) (message Message, err error) {
 	err = b.sendResuest("sendVideo", params, &message)
 	return message, err
 }
 
-func (b Bot) SendVoice(params ParamsSendVoice) (message Message, err error) {
+// SendVoice sends voice note message.
+func (b TelegramBot) SendVoice(params ParamsSendVoice) (message Message, err error) {
 	err = b.sendResuest("sendVoice", params, &message)
 	return message, err
 }
 
-func (b Bot) SendVideoNote(params ParamsSendVideoNote) (message Message, err error) {
+// SendVideoNote sends video note message.
+func (b TelegramBot) SendVideoNote(params ParamsSendVideoNote) (message Message, err error) {
 	err = b.sendResuest("sendVideoNote", params, &message)
 	return message, err
 }
 
-func (b Bot) SendLocation(params ParamsSendLocation) (message Message, err error) {
+// SendLocation sends location message.
+func (b TelegramBot) SendLocation(params ParamsSendLocation) (message Message, err error) {
 	err = b.sendResuest("sendLocation", params, &message)
 	return message, err
 }
 
-func (b Bot) sendResuest(method string, paramsObject interface{}, t interface{}) error {
+func (b TelegramBot) sendResuest(method string, paramsObject interface{}, t interface{}) error {
 	return sendResuest(method, b.apiKey, paramsObject, &t)
 }
