@@ -7,6 +7,143 @@ import (
 	"strings"
 )
 
+// API method parameters
+
+// ParamsGetUpdates represents parameters for GetUpdates method.
+type ParamsGetUpdates struct {
+	Offset  int `option:"offset"`
+	Limit   int `option:"limit"`
+	Timeout int `option:"timeout"`
+}
+
+// ParamsSendMessage represents parameters for SendMessage method.
+type ParamsSendMessage struct {
+	ChatID                *ChatIdentifier `option:"chat_id"                 required:"true"`
+	Text                  string          `option:"text"                    required:"true"`
+	ParseMode             *ParseMode      `option:"parse_mode"`
+	DisableWebPagePreview bool            `option:"disable_web_page_preview"`
+	DisableNotification   bool            `option:"disable_notification"`
+	ReplyToMessageID      int             `option:"reply_to_message_id"`
+	ReplyMarkup           *ReplyMarkup    `option:"reply_markup"`
+}
+
+// ParamsForwardMessage represents parameters for ForwardMessage method.
+type ParamsForwardMessage struct {
+	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
+	FromChatID          *ChatIdentifier `option:"from_chat_id"              required:"true"`
+	DisableNotification bool            `option:"disable_notification"`
+	MessageID           int             `option:"message_id"                required:"true"`
+}
+
+// ParamsSendPhoto represents parameters for SendPhoto method.
+type ParamsSendPhoto struct {
+	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
+	Photo               *InputFile      `option:"photo"                     required:"true"`
+	Caption             string          `option:"caption"`
+	DisableNotification bool            `option:"disable_notification"`
+	ReplyToMessageID    int             `option:"reply_to_message_id"`
+	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
+}
+
+// ParamsSendAudio represents parameters for SendAudio method.
+type ParamsSendAudio struct {
+	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
+	Audio               *InputFile      `option:"audio"                     required:"true"`
+	Caption             string          `option:"caption"`
+	Duration            int             `option:"duration"`
+	Performer           string          `option:"performer"`
+	Title               string          `option:"title"`
+	DisableNotification bool            `option:"disable_notification"`
+	ReplyToMessageID    int             `option:"reply_to_message_id"`
+	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
+}
+
+// ParamsSendDocument represents parameters for SendDocument method.
+type ParamsSendDocument struct {
+	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
+	Document            *InputFile      `option:"document"                  required:"true"`
+	Caption             string          `option:"caption"`
+	DisableNotification bool            `option:"disable_notification"`
+	ReplyToMessageID    int             `option:"reply_to_message_id"`
+	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
+}
+
+// ParamsSendVideo represents parameters for SendVideo method.
+type ParamsSendVideo struct {
+	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
+	Video               *InputFile      `option:"video"                     required:"true"`
+	Duration            int             `option:"duration"`
+	Width               int             `option:"width"`
+	Height              int             `option:"height"`
+	Caption             string          `option:"caption"`
+	DisableNotification bool            `option:"disable_notification"`
+	ReplyToMessageID    int             `option:"reply_to_message_id"`
+	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
+}
+
+// ParamsSendVoice represents parameters for SendVoice method.
+type ParamsSendVoice struct {
+	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
+	Voice               *InputFile      `option:"voice"                     required:"true"`
+	Duration            int             `option:"duration"`
+	Caption             string          `option:"caption"`
+	DisableNotification bool            `option:"disable_notification"`
+	ReplyToMessageID    int             `option:"reply_to_message_id"`
+	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
+}
+
+// ParamsSendVideoNote represents parameters for SendVideoNote method.
+type ParamsSendVideoNote struct {
+	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
+	VideoNote           *InputFile      `option:"video_note"                required:"true"`
+	Duration            int             `option:"duration"`
+	Length              int             `option:"length"`
+	Caption             string          `option:"caption"`
+	DisableNotification bool            `option:"disable_notification"`
+	ReplyToMessageID    int             `option:"reply_to_message_id"`
+	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
+}
+
+// ParamsSendLocation represents parameters for SendLocation method.
+type ParamsSendLocation struct {
+	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
+	Latitude            float64         `option:"latitude"                  required:"true"`
+	Longitude           float64         `option:"longitude"                 required:"true"`
+	DisableNotification bool            `option:"disable_notification"`
+	ReplyToMessageID    int             `option:"reply_to_message_id"`
+	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
+}
+
+// ParamsSendVenue represents parameters for SendVenue method.
+type ParamsSendVenue struct {
+	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
+	Latitude            float64         `option:"latitude"                  required:"true"`
+	Longitude           float64         `option:"longitude"                 required:"true"`
+	Title               string          `option:"title"                     required:"true"`
+	Address             string          `option:"address"                   required:"true"`
+	FoursquareID        string          `option:"foursquare_id"`
+	DisableNotification bool            `option:"disable_notification"`
+	ReplyToMessageID    int             `option:"reply_to_message_id"`
+	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
+}
+
+// ParamsSendContact represents parameters for SendContact method.
+type ParamsSendContact struct {
+	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
+	PhoneNumber         string          `option:"phone_number"              required:"true"`
+	FirstName           string          `option:"first_name"                required:"true"`
+	LastName            string          `option:"last_name"`
+	DisableNotification bool            `option:"disable_notification"`
+	ReplyToMessageID    int             `option:"reply_to_message_id"`
+	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
+}
+
+// ParamsSendChatAction represents parameters for SendChatAction method.
+type ParamsSendChatAction struct {
+	ChatID *ChatIdentifier `option:"chat_id"                   required:"true"`
+	Action *ChatAction     `option:"action"                    required:"true"`
+}
+
 // API method option ChatIdentifier
 
 // ChatIdentifier represents unique identifier of chat.
@@ -106,109 +243,49 @@ func FilePath(filePath string) *InputFile {
 	return &InputFile{fileData: bytes, filename: filepath.Base(filePath)}
 }
 
-// API method parameters
+// API method option ChatAction
 
-// ParamsGetUpdates represents parameters for GetUpdates method.
-type ParamsGetUpdates struct {
-	Offset  int `option:"offset"`
-	Limit   int `option:"limit"`
-	Timeout int `option:"timeout"`
+// ChatAction represents chat action
+type ChatAction struct {
+	action string
 }
 
-// ParamsSendMessage represents parameters for SendMessage method.
-type ParamsSendMessage struct {
-	ChatID                *ChatIdentifier `option:"chat_id"                   required:"true"`
-	Text                  string          `option:"text"                      required:"true"`
-	ParseMode             *ParseMode      `option:"parse_mode"`
-	DisableWebPagePreview bool            `option:"disable_web_page_preview"`
-	DisableNotification   bool            `option:"disable_notification"`
-	ReplyToMessageID      int             `option:"reply_to_message_id"`
-	ReplyMarkup           *ReplyMarkup    `option:"reply_markup"`
+// Get returns string representation of chat action.
+func (p *ChatAction) Get() string {
+	return p.action
 }
 
-// ParamsForwardMessage represents parameters for ForwardMessage method.
-type ParamsForwardMessage struct {
-	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
-	FromChatID          *ChatIdentifier `option:"from_chat_id"              required:"true"`
-	DisableNotification bool            `option:"disable_notification"`
-	MessageID           int             `option:"message_id"                required:"true"`
+// ChatActionTyping creates ChatAction with "typing" option
+func ChatActionTyping() *ChatAction {
+	return &ChatAction{action: "typing"}
 }
 
-// ParamsSendPhoto represents parameters for SendPhoto method.
-type ParamsSendPhoto struct {
-	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
-	Photo               *InputFile      `option:"photo"                     required:"true"`
-	Caption             string          `option:"caption"`
-	DisableNotification bool            `option:"disable_notification"`
-	ReplyToMessageID    int             `option:"reply_to_message_id"`
-	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
+// ChatActionUploadPhoto creates ChatAction with "upload_photo" option
+func ChatActionUploadPhoto() *ChatAction {
+	return &ChatAction{action: "upload_photo"}
 }
 
-// ParamsSendAudio represents parameters for SendAudio method.
-type ParamsSendAudio struct {
-	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
-	Audio               *InputFile      `option:"audio"                     required:"true"`
-	Caption             string          `option:"caption"`
-	Duration            int             `option:"duration"`
-	Performer           string          `option:"performer"`
-	Title               string          `option:"title"`
-	DisableNotification bool            `option:"disable_notification"`
-	ReplyToMessageID    int             `option:"reply_to_message_id"`
-	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
+// ChatActionUploadVideo creates ChatAction with "upload_video" option
+func ChatActionUploadVideo() *ChatAction {
+	return &ChatAction{action: "upload_video"}
 }
 
-// ParamsSendDocument represents parameters for SendDocument method.
-type ParamsSendDocument struct {
-	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
-	Document            *InputFile      `option:"document"                  required:"true"`
-	Caption             string          `option:"caption"`
-	DisableNotification bool            `option:"disable_notification"`
-	ReplyToMessageID    int             `option:"reply_to_message_id"`
-	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
+// ChatActionUploadAudio creates ChatAction with "upload_audio" option
+func ChatActionUploadAudio() *ChatAction {
+	return &ChatAction{action: "upload_audio"}
 }
 
-// ParamsSendVideo represents parameters for SendVideo method.
-type ParamsSendVideo struct {
-	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
-	Video               *InputFile      `option:"video"                     required:"true"`
-	Duration            int             `option:"duration"`
-	Width               int             `option:"width"`
-	Height              int             `option:"height"`
-	Caption             string          `option:"caption"`
-	DisableNotification bool            `option:"disable_notification"`
-	ReplyToMessageID    int             `option:"reply_to_message_id"`
-	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
+// ChatActionUploadDocument creates ChatAction with "upload_document" option
+func ChatActionUploadDocument() *ChatAction {
+	return &ChatAction{action: "upload_document"}
 }
 
-// ParamsSendVoice represents parameters for SendVoice method.
-type ParamsSendVoice struct {
-	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
-	Voice               *InputFile      `option:"voice"                     required:"true"`
-	Duration            int             `option:"duration"`
-	Caption             string          `option:"caption"`
-	DisableNotification bool            `option:"disable_notification"`
-	ReplyToMessageID    int             `option:"reply_to_message_id"`
-	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
+// ChatActionFindLocation creates ChatAction with "find_location" option
+func ChatActionFindLocation() *ChatAction {
+	return &ChatAction{action: "find_location"}
 }
 
-// ParamsSendVideoNote represents parameters for SendVideoNote method.
-type ParamsSendVideoNote struct {
-	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
-	VideoNote           *InputFile      `option:"video_note"                required:"true"`
-	Duration            int             `option:"duration"`
-	Length              int             `option:"length"`
-	Caption             string          `option:"caption"`
-	DisableNotification bool            `option:"disable_notification"`
-	ReplyToMessageID    int             `option:"reply_to_message_id"`
-	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
-}
-
-// ParamsSendLocation represents parameters for SendLocation method.
-type ParamsSendLocation struct {
-	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
-	Latitude            float64         `option:"latitude"                  required:"true"`
-	Longitude           float64         `option:"longitude"                 required:"true"`
-	DisableNotification bool            `option:"disable_notification"`
-	ReplyToMessageID    int             `option:"reply_to_message_id"`
-	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
+// ChatActionUploadVideoNote creates ChatAction with "upload_video_note" option
+func ChatActionUploadVideoNote() *ChatAction {
+	return &ChatAction{action: "upload_video_note"}
 }
