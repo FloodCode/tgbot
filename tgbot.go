@@ -113,6 +113,24 @@ func (b TelegramBot) SendLocation(params ParamsSendLocation) (message Message, e
 	return message, err
 }
 
+// SendVenue sends information about a venue.
+func (b TelegramBot) SendVenue(params ParamsSendVenue) (message Message, err error) {
+	err = b.sendResuest("sendVenue", params, &message)
+	return message, err
+}
+
+// SendContact sends phone contact.
+func (b TelegramBot) SendContact(params ParamsSendContact) (message Message, err error) {
+	err = b.sendResuest("sendContact", params, &message)
+	return message, err
+}
+
+// SendChatAction sends phone contact.
+func (b TelegramBot) SendChatAction(params ParamsSendChatAction) (success bool, err error) {
+	err = b.sendResuest("sendChatAction", params, &success)
+	return success, err
+}
+
 func (b TelegramBot) sendResuest(method string, paramsObject interface{}, t interface{}) error {
 	return sendResuest(method, b.apiKey, paramsObject, &t)
 }

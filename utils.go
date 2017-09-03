@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
@@ -141,6 +142,10 @@ func extractParams(paramsObject interface{}) (map[string]interface{}, error) {
 			if v != nil {
 				extractedValue = v.Get()
 			}
+		case *ChatAction:
+			if v != nil {
+				extractedValue = v.Get()
+			}
 		case *InputFile:
 			if v != nil {
 				extractedValue = v
@@ -158,5 +163,5 @@ func extractParams(paramsObject interface{}) (map[string]interface{}, error) {
 }
 
 func logRequestError(err error, method string, parameters interface{}) {
-	// TODO: Log request error
+	fmt.Println("Request error:", err)
 }
