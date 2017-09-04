@@ -249,6 +249,19 @@ type ShippingAddress struct {
 	PostCode    string `json:"post_code"`
 }
 
+// UserProfilePhotos represents a user's profile pictures.
+type UserProfilePhotos struct {
+	TotalCount int            `json:"total_count"`
+	Photos     *[][]PhotoSize `json:"photos"`
+}
+
+// File represents a file ready to be downloaded.
+type File struct {
+	FileID   string `json:"file_id"`
+	FileSize int    `json:"file_size"`
+	FilePath string `json:"file_path"`
+}
+
 type apiResponse struct {
 	Ok          bool            `json:"ok"`
 	Result      json.RawMessage `json:"result"`

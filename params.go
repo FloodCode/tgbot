@@ -140,8 +140,33 @@ type ParamsSendContact struct {
 
 // ParamsSendChatAction represents parameters for SendChatAction method.
 type ParamsSendChatAction struct {
-	ChatID *ChatIdentifier `option:"chat_id"                   required:"true"`
-	Action *ChatAction     `option:"action"                    required:"true"`
+	ChatID *ChatIdentifier `option:"chat_id"                                required:"true"`
+	Action *ChatAction     `option:"action"                                 required:"true"`
+}
+
+// ParamsGetUserProfilePhotos represents parameters for GetUserProfilePhotos method.
+type ParamsGetUserProfilePhotos struct {
+	UserID int `option:"user_id"                                            required:"true"`
+	Offset int `option:"offset"`
+	Limit  int `option:"limit"`
+}
+
+// ParamsGetFile represents parameters for GetFile method.
+type ParamsGetFile struct {
+	FileID string `option:"file_id"                                         required:"true"`
+}
+
+// ParamsKickChatMember represents parameters for KickChatMember method.
+type ParamsKickChatMember struct {
+	ChatID    *ChatIdentifier `option:"chat_id"                             required:"true"`
+	UserID    int             `option:"user_id"                             required:"true"`
+	UntilDate int             `option:"until_date"`
+}
+
+// ParamsUnbanChatMember represents parameters for KickChatMember method.
+type ParamsUnbanChatMember struct {
+	ChatID *ChatIdentifier `option:"chat_id"                                required:"true"`
+	UserID int             `option:"user_id"                                required:"true"`
 }
 
 // API method option ChatIdentifier
