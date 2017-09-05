@@ -169,6 +169,71 @@ type ParamsUnbanChatMember struct {
 	UserID int             `option:"user_id"                                required:"true"`
 }
 
+// ParamsRestrictChatMember represents parameters for RestrictChatMember method.
+type ParamsRestrictChatMember struct {
+	ChatID                *ChatIdentifier `option:"chat_id"                 required:"true"`
+	UserID                int             `option:"user_id"                 required:"true"`
+	UntilDate             int             `option:"until_date"`
+	CanSendMessages       bool            `option:"can_send_messages"`
+	CanSendMediaMessages  bool            `option:"can_send_media_messages"`
+	CanSendOtherMessages  bool            `option:"can_send_other_messages"`
+	CanAddWebPagePreviews bool            `option:"can_add_web_page_previews"`
+}
+
+// ParamsPromoteChatMember represents parameters for PromoteChatMember method.
+type ParamsPromoteChatMember struct {
+	ChatID             *ChatIdentifier `option:"chat_id"                    required:"true"`
+	UserID             int             `option:"user_id"                    required:"true"`
+	CanChangeInfo      bool            `option:"can_change_info"`
+	CanPostMessages    bool            `option:"can_post_messages"`
+	CanEditMessages    bool            `option:"can_edit_messages"`
+	CanDeleteMessages  bool            `option:"can_delete_messages"`
+	CanInviteUsers     bool            `option:"can_invite_users"`
+	CanRestrictMembers bool            `option:"can_restrict_members"`
+	CanPinMessages     bool            `option:"can_pin_messages"`
+	CanPromoteMembers  bool            `option:"can_promote_members"`
+}
+
+// ParamsExportChatInviteLink represents parameters for ExportChatInviteLink method.
+type ParamsExportChatInviteLink struct {
+	ChatID *ChatIdentifier `option:"chat_id"                                required:"true"`
+}
+
+// ParamsSetChatPhoto represents parameters for SetChatPhoto method.
+type ParamsSetChatPhoto struct {
+	ChatID *ChatIdentifier `option:"chat_id"                                required:"true"`
+	Photo  *InputFile      `option:"photo"                                  required:"true"`
+}
+
+// ParamsDeleteChatPhoto represents parameters for DeleteChatPhoto method.
+type ParamsDeleteChatPhoto struct {
+	ChatID *ChatIdentifier `option:"chat_id"                                required:"true"`
+}
+
+// ParamsSetChatTitle represents parameters for SetChatTitle method.
+type ParamsSetChatTitle struct {
+	ChatID *ChatIdentifier `option:"chat_id"                                required:"true"`
+	Title  string          `option:"title"                                  required:"true"`
+}
+
+// ParamsSetChatDescription represents parameters for SetChatDescription method.
+type ParamsSetChatDescription struct {
+	ChatID      *ChatIdentifier `option:"chat_id"                           required:"true"`
+	Description string          `option:"description"                       required:"true"`
+}
+
+// ParamsPinChatMessage represents parameters for PinChatMessage method.
+type ParamsPinChatMessage struct {
+	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
+	MessageID           int             `option:"message_id"                required:"true"`
+	DisableNotification bool            `option:"disable_notification"`
+}
+
+// ParamsUnpinChatMessage represents parameters for UnpinChatMessage method.
+type ParamsUnpinChatMessage struct {
+	ChatID *ChatIdentifier `option:"chat_id"                                required:"true"`
+}
+
 // API method option ChatIdentifier
 
 // ChatIdentifier represents unique identifier of chat.

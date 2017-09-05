@@ -136,6 +136,51 @@ func (b TelegramBot) UnbanChatMember(params ParamsUnbanChatMember) (success bool
 	return success, b.sendResuest("unbanChatMember", params, &success)
 }
 
+// RestrictChatMember allows to restrict a user in a supergroup.
+func (b TelegramBot) RestrictChatMember(params ParamsRestrictChatMember) (success bool, err error) {
+	return success, b.sendResuest("restrictChatMember", params, &success)
+}
+
+// PromoteChatMember allows to promote or demote a user in a supergroup or a channel.
+func (b TelegramBot) PromoteChatMember(params ParamsPromoteChatMember) (success bool, err error) {
+	return success, b.sendResuest("promoteChatMember", params, &success)
+}
+
+// ExportChatInviteLink allows to export an invite link to a supergroup or a channel.
+func (b TelegramBot) ExportChatInviteLink(params ParamsExportChatInviteLink) (link string, err error) {
+	return link, b.sendResuest("exportChatInviteLink", params, &link)
+}
+
+// SetChatPhoto allows to set a new profile photo for the chat.
+func (b TelegramBot) SetChatPhoto(params ParamsSetChatPhoto) (success bool, err error) {
+	return success, b.sendResuest("setChatPhoto", params, &success)
+}
+
+// DeleteChatPhoto allows to delete a new profile photo for the chat.
+func (b TelegramBot) DeleteChatPhoto(params ParamsDeleteChatPhoto) (success bool, err error) {
+	return success, b.sendResuest("deleteChatPhoto", params, &success)
+}
+
+// SetChatTitle allows to change the title of a chat.
+func (b TelegramBot) SetChatTitle(params ParamsSetChatTitle) (success bool, err error) {
+	return success, b.sendResuest("setChatTitle", params, &success)
+}
+
+// SetChatDescription allows to change the description of a chat.
+func (b TelegramBot) SetChatDescription(params ParamsSetChatDescription) (success bool, err error) {
+	return success, b.sendResuest("setChatDescription", params, &success)
+}
+
+// PinChatMessage allows to pin a message in a supergroup.
+func (b TelegramBot) PinChatMessage(params ParamsPinChatMessage) (success bool, err error) {
+	return success, b.sendResuest("pinChatMessage", params, &success)
+}
+
+// UnpinChatMessage allows to pin a message in a supergroup.
+func (b TelegramBot) UnpinChatMessage(params ParamsUnpinChatMessage) (success bool, err error) {
+	return success, b.sendResuest("unpinChatMessage", params, &success)
+}
+
 func (b TelegramBot) sendResuest(method string, paramsObject interface{}, t interface{}) error {
 	return sendResuest(method, b.apiKey, paramsObject, &t)
 }
