@@ -47,8 +47,8 @@ func (b *TelegramBot) Poll() {
 }
 
 // GetMe returns basic information about the bot.
-func (b TelegramBot) GetMe() (me User, err error) {
-	return me, b.sendResuest("getme", nil, &me)
+func (b TelegramBot) GetMe() (user User, err error) {
+	return user, b.sendResuest("getme", nil, &user)
 }
 
 // GetUpdates allows to get new updates.
@@ -176,9 +176,44 @@ func (b TelegramBot) PinChatMessage(params ParamsPinChatMessage) (success bool, 
 	return success, b.sendResuest("pinChatMessage", params, &success)
 }
 
-// UnpinChatMessage allows to pin a message in a supergroup.
+// UnpinChatMessage allows to unpin a message in a supergroup.
 func (b TelegramBot) UnpinChatMessage(params ParamsUnpinChatMessage) (success bool, err error) {
 	return success, b.sendResuest("unpinChatMessage", params, &success)
+}
+
+// LeaveChat allows to leave a group, supergroup or channel.
+func (b TelegramBot) LeaveChat(params ParamsLeaveChat) (success bool, err error) {
+	return success, b.sendResuest("leaveChat", params, &success)
+}
+
+// GetChat allows to get up to date information about the chat.
+func (b TelegramBot) GetChat(params ParamsGetChat) (chat Chat, err error) {
+	return chat, b.sendResuest("getChat", params, &chat)
+}
+
+// GetChatAdministrators allows to get a list of administrators in a chat.
+func (b TelegramBot) GetChatAdministrators(params ParamsGetChatAdministrators) (members []ChatMember, err error) {
+	return members, b.sendResuest("getChatAdministrators", params, &members)
+}
+
+// GetChatMembersCount allows get the number of members in a chat.
+func (b TelegramBot) GetChatMembersCount(params ParamsGetChatMembersCount) (count int, err error) {
+	return count, b.sendResuest("getChatMembersCount", params, &count)
+}
+
+// GetChatMember allows to get information about a member of a chat.
+func (b TelegramBot) GetChatMember(params ParamsGetChatMember) (member ChatMember, err error) {
+	return member, b.sendResuest("getChatMember", params, &member)
+}
+
+// EditMessageText allows to edit text and game messages sent by the bot or via the bot (for inline bots).
+func (b TelegramBot) EditMessageText(params ParamsEditMessageText) (message Message, err error) {
+	return message, b.sendResuest("editMessageText", params, &message)
+}
+
+// EditMessageCaption allows to edit captions of messages sent by the bot or via the bot (for inline bots).
+func (b TelegramBot) EditMessageCaption(params ParamsEditMessageCaption) (message Message, err error) {
+	return message, b.sendResuest("editMessageCaption", params, &message)
 }
 
 func (b TelegramBot) sendResuest(method string, paramsObject interface{}, t interface{}) error {

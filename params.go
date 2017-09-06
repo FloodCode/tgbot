@@ -234,6 +234,52 @@ type ParamsUnpinChatMessage struct {
 	ChatID *ChatIdentifier `option:"chat_id"                                required:"true"`
 }
 
+// ParamsLeaveChat represents parameters for LeaveChat method.
+type ParamsLeaveChat struct {
+	ChatID *ChatIdentifier `option:"chat_id"                                required:"true"`
+}
+
+// ParamsGetChat represents parameters for GetChat method.
+type ParamsGetChat struct {
+	ChatID *ChatIdentifier `option:"chat_id"                                required:"true"`
+}
+
+// ParamsGetChatAdministrators represents parameters for GetChatAdministrators method.
+type ParamsGetChatAdministrators struct {
+	ChatID *ChatIdentifier `option:"chat_id"                                required:"true"`
+}
+
+// ParamsGetChatMembersCount represents parameters for GetChatMembersCount method.
+type ParamsGetChatMembersCount struct {
+	ChatID *ChatIdentifier `option:"chat_id"                                required:"true"`
+}
+
+// ParamsGetChatMember represents parameters for GetChatMember method.
+type ParamsGetChatMember struct {
+	ChatID *ChatIdentifier `option:"chat_id"                                required:"true"`
+	UserID int             `option:"user_id"`
+}
+
+// ParamsEditMessageText represents parameters for EditMessageText method.
+type ParamsEditMessageText struct {
+	ChatID                *ChatIdentifier `option:"chat_id"`
+	MessageID             int             `option:"message_id"`
+	InlineMessageID       string          `option:"inline_message_id"`
+	Text                  string          `option:"text"                    required:"true"`
+	ParseMode             *ParseMode      `option:"parse_mode"`
+	DisableWebPagePreview bool            `option:"disable_web_page_preview"`
+	ReplyMarkup           *ReplyMarkup    `option:"reply_markup"`
+}
+
+// ParamsEditMessageCaption represents parameters for EditMessageCaption method.
+type ParamsEditMessageCaption struct {
+	ChatID          *ChatIdentifier `option:"chat_id"`
+	MessageID       int             `option:"message_id"`
+	InlineMessageID string          `option:"inline_message_id"`
+	Caption         string          `option:"caption"                       required:"true"`
+	ReplyMarkup     *ReplyMarkup    `option:"reply_markup"`
+}
+
 // API method option ChatIdentifier
 
 // ChatIdentifier represents unique identifier of chat.

@@ -153,6 +153,14 @@ type Sticker struct {
 	FileSize     int           `json:"file_size"`
 }
 
+// StickerSet represents a sticker set.
+type StickerSet struct {
+	Name          string     `json:"name"`
+	Title         string     `json:"title"`
+	ContainsMasks bool       `json:"contains_masks"`
+	Stickers      *[]Sticker `json:"stickers"`
+}
+
 // MaskPosition describes the position on faces where a mask should be placed by default.
 type MaskPosition struct {
 	Point  string  `json:"point"`
@@ -260,6 +268,26 @@ type File struct {
 	FileID   string `json:"file_id"`
 	FileSize int    `json:"file_size"`
 	FilePath string `json:"file_path"`
+}
+
+// ChatMember represents information about one member of a chat.
+type ChatMember struct {
+	User                  *User  `json:"user"`
+	Status                string `json:"status"`
+	UntilDate             int    `json:"until_date"`
+	CanBeEdited           bool   `json:"can_be_edited"`
+	CanChangeInfo         bool   `json:"can_change_info"`
+	CanPostMessages       bool   `json:"can_post_messages"`
+	CanEditMessages       bool   `json:"can_edit_messages"`
+	CanDeleteMessages     bool   `json:"can_delete_messages"`
+	CanInviteUsers        bool   `json:"can_invite_users"`
+	CanRestrictMembers    bool   `json:"can_restrict_members"`
+	CanPinMessages        bool   `json:"can_pin_messages"`
+	CanPromoteMembers     bool   `json:"can_promote_members"`
+	CanSendMessages       bool   `json:"can_send_messages"`
+	CanSendMediaMessages  bool   `json:"can_send_media_messages"`
+	CanSendOtherMessages  bool   `json:"can_send_other_messages"`
+	CanAddWebPagePreviews bool   `json:"can_add_web_page_previews"`
 }
 
 type apiResponse struct {
