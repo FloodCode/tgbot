@@ -1,6 +1,7 @@
 package tgbot
 
 import (
+	"encoding/json"
 	"io/ioutil"
 	"path/filepath"
 	"strconv"
@@ -329,11 +330,15 @@ func ParseModeHTML() *ParseMode {
 }
 
 // API method option ReplyMarkup
-// TODO: Implement logic
 
 // ReplyMarkup represents message reply markup
 type ReplyMarkup struct {
 	markup string
+}
+
+// Get returns markup data in JSON format.
+func (m *ReplyMarkup) Get() interface{} {
+	return m.markup
 }
 
 // API method option InputFile
@@ -381,7 +386,7 @@ func FilePath(filePath string) *InputFile {
 
 // API method option ChatAction
 
-// ChatAction represents chat action
+// ChatAction represents chat action.
 type ChatAction struct {
 	action string
 }
@@ -391,37 +396,73 @@ func (p *ChatAction) Get() string {
 	return p.action
 }
 
-// ChatActionTyping creates ChatAction with "typing" option
+// ChatActionTyping creates ChatAction with "typing" option.
 func ChatActionTyping() *ChatAction {
 	return &ChatAction{action: "typing"}
 }
 
-// ChatActionUploadPhoto creates ChatAction with "upload_photo" option
+// ChatActionUploadPhoto creates ChatAction with "upload_photo" option.
 func ChatActionUploadPhoto() *ChatAction {
 	return &ChatAction{action: "upload_photo"}
 }
 
-// ChatActionUploadVideo creates ChatAction with "upload_video" option
+// ChatActionUploadVideo creates ChatAction with "upload_video" option.
 func ChatActionUploadVideo() *ChatAction {
 	return &ChatAction{action: "upload_video"}
 }
 
-// ChatActionUploadAudio creates ChatAction with "upload_audio" option
+// ChatActionUploadAudio creates ChatAction with "upload_audio" option.
 func ChatActionUploadAudio() *ChatAction {
 	return &ChatAction{action: "upload_audio"}
 }
 
-// ChatActionUploadDocument creates ChatAction with "upload_document" option
+// ChatActionUploadDocument creates ChatAction with "upload_document" option.
 func ChatActionUploadDocument() *ChatAction {
 	return &ChatAction{action: "upload_document"}
 }
 
-// ChatActionFindLocation creates ChatAction with "find_location" option
+// ChatActionFindLocation creates ChatAction with "find_location" option.
 func ChatActionFindLocation() *ChatAction {
 	return &ChatAction{action: "find_location"}
 }
 
-// ChatActionUploadVideoNote creates ChatAction with "upload_video_note" option
+// ChatActionUploadVideoNote creates ChatAction with "upload_video_note" option.
 func ChatActionUploadVideoNote() *ChatAction {
 	return &ChatAction{action: "upload_video_note"}
+}
+
+// Reply markup
+
+// InlineKeyboardMarkup represents an inline keyboard that appears right next to the message it belongs to.
+func InlineKeyboardMarkup(inlineKeyboard [][]InlineKeyboardButton) *ReplyMarkup {
+	result, _ := json.Marshal(inlineKeyboard)
+	return &ReplyMarkup{markup: `{"inline_keyboard":` + string(result) + `}`}
+}
+
+// ReplyKeyboardMarkup represents a custom keyboard with reply options.
+func ReplyKeyboardMarkup(keyboard [][]KeyboardButton) *ReplyMarkup {
+	result, _ := json.Marshal(keyboard)
+	return &ReplyMarkup{markup: `{"keyboard":` + string(result) + `}`}
+}
+
+// ReplyKeyboardRemove represents reply markup with removal option.
+func ReplyKeyboardRemove() *ReplyMarkup {
+	return &ReplyMarkup{markup: `{"remove_keyboard":true}`}
+}
+
+// ReplyKeyboardRemoveSelective represents reply markup with selective removal option.
+func ReplyKeyboardRemoveSelective() *ReplyMarkup {
+	return &ReplyMarkup{markup: `{"remove_keyboard":true,"selective":true}`}
+}
+
+// ForceReply shows reply interface to user,
+// as if they manually selected the bot‘s message and tapped ’Reply'.
+func ForceReply() *ReplyMarkup {
+	return &ReplyMarkup{markup: `{"force_reply":true}`}
+}
+
+// ForceReplySelective selectively shows reply interface to user,
+// as if they manually selected the bot‘s message and tapped ’Reply'.
+func ForceReplySelective() *ReplyMarkup {
+	return &ReplyMarkup{markup: `{"force_reply":true,"selective":true}`}
 }
