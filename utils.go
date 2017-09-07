@@ -146,6 +146,10 @@ func extractParams(paramsObject interface{}) (map[string]interface{}, error) {
 			if v != nil {
 				extractedValue = v.Get()
 			}
+		case *ReplyMarkup:
+			if v != nil {
+				extractedValue = v.Get()
+			}
 		case *InputFile:
 			if v != nil {
 				extractedValue = v

@@ -4,7 +4,7 @@ import (
 	"time"
 )
 
-// TelegramBot allows to interact with Telegram TelegramBot API.
+// TelegramBot allows to interact with Telegram Bot API.
 type TelegramBot struct {
 	apiKey          string
 	poolDelay       int

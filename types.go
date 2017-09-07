@@ -290,6 +290,29 @@ type ChatMember struct {
 	CanAddWebPagePreviews bool   `json:"can_add_web_page_previews"`
 }
 
+// CallbackGame is a placeholder, currently holds no information.
+// Use BotFather to set up your game.
+type CallbackGame struct{}
+
+// InlineKeyboardButton represents one button of an inline keyboard.
+// You must use exactly one of the optional fields.
+type InlineKeyboardButton struct {
+	Text                         string        `json:"text"`
+	URL                          string        `json:"url"`
+	CallbackData                 string        `json:"callback_data"`
+	SwitchInlineQuery            string        `json:"switch_inline_query"`
+	SwitchInlineQueryCurrentChat string        `json:"switch_inline_query_current_chat"`
+	CallbackGame                 *CallbackGame `json:"callback_game"`
+	Pay                          bool          `json:"pay"`
+}
+
+// KeyboardButton represents one button of the reply keyboard.
+type KeyboardButton struct {
+	Text            string `json:"text"`
+	RequestContact  bool   `json:"request_contact"`
+	RequestLocation bool   `json:"request_location"`
+}
+
 type apiResponse struct {
 	Ok          bool            `json:"ok"`
 	Result      json.RawMessage `json:"result"`
