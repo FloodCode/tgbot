@@ -111,6 +111,11 @@ func (b TelegramBot) SendContact(params ParamsSendContact) (message Message, err
 	return message, b.sendResuest("sendContact", params, &message)
 }
 
+// SendSticker sends sticker.
+func (b TelegramBot) SendSticker(params ParamsSendSticker) (message Message, err error) {
+	return message, b.sendResuest("sendSticker", params, &message)
+}
+
 // SendChatAction sends phone contact.
 func (b TelegramBot) SendChatAction(params ParamsSendChatAction) (success bool, err error) {
 	return success, b.sendResuest("sendChatAction", params, &success)
@@ -214,6 +219,37 @@ func (b TelegramBot) EditMessageText(params ParamsEditMessageText) (message Mess
 // EditMessageCaption allows to edit captions of messages sent by the bot or via the bot (for inline bots).
 func (b TelegramBot) EditMessageCaption(params ParamsEditMessageCaption) (message Message, err error) {
 	return message, b.sendResuest("editMessageCaption", params, &message)
+}
+
+// GetStickerSet allows to get a sticker set.
+func (b TelegramBot) GetStickerSet(params ParamsGetStickerSet) (stickerSet StickerSet, err error) {
+	return stickerSet, b.sendResuest("getStickerSet", params, &stickerSet)
+}
+
+// UploadStickerFile allows to upload a .png file with a sticker for
+// later use in CreateNewStickerSet and AddStickerToSet methods.
+func (b TelegramBot) UploadStickerFile(params ParamsUploadStickerFile) (file File, err error) {
+	return file, b.sendResuest("uploadStickerFile", params, &file)
+}
+
+// CreateNewStickerSet allows to create new sticker set owned by a user.
+func (b TelegramBot) CreateNewStickerSet(params ParamsCreateNewStickerSet) (success bool, err error) {
+	return success, b.sendResuest("createNewStickerSet", params, &success)
+}
+
+// AddStickerToSet allows to add a new sticker to a set created by the bot.
+func (b TelegramBot) AddStickerToSet(params ParamsAddStickerToSet) (success bool, err error) {
+	return success, b.sendResuest("addStickerToSet", params, &success)
+}
+
+// SetStickerPositionInSet allows to move a sticker in a set created by the bot to a specific position.
+func (b TelegramBot) SetStickerPositionInSet(params ParamsSetStickerPositionInSet) (success bool, err error) {
+	return success, b.sendResuest("setStickerPositionInSet", params, &success)
+}
+
+// DeleteStickerFromSet allows to delete a sticker from a set created by the bot.
+func (b TelegramBot) DeleteStickerFromSet(params ParamsDeleteStickerFromSet) (success bool, err error) {
+	return success, b.sendResuest("deleteStickerFromSet", params, &success)
 }
 
 func (b TelegramBot) sendResuest(method string, paramsObject interface{}, t interface{}) error {
