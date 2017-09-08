@@ -139,6 +139,15 @@ type ParamsSendContact struct {
 	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
 }
 
+// ParamsSendSticker represents parameters for SendSticker method.
+type ParamsSendSticker struct {
+	ChatID              *ChatIdentifier `option:"chat_id"                   required:"true"`
+	Sticker             *InputFile      `option:"sticker"                   required:"true"`
+	DisableNotification bool            `option:"disable_notification"`
+	ReplyToMessageID    int             `option:"reply_to_message_id"`
+	ReplyMarkup         *ReplyMarkup    `option:"reply_markup"`
+}
+
 // ParamsSendChatAction represents parameters for SendChatAction method.
 type ParamsSendChatAction struct {
 	ChatID *ChatIdentifier `option:"chat_id"                                required:"true"`
@@ -279,6 +288,48 @@ type ParamsEditMessageCaption struct {
 	InlineMessageID string          `option:"inline_message_id"`
 	Caption         string          `option:"caption"                       required:"true"`
 	ReplyMarkup     *ReplyMarkup    `option:"reply_markup"`
+}
+
+// ParamsGetStickerSet represents parameters for GetStickerSet method.
+type ParamsGetStickerSet struct {
+	Name string `option:"name"                                              required:"true"`
+}
+
+// ParamsUploadStickerFile represents parameters for UploadStickerFile method.
+type ParamsUploadStickerFile struct {
+	UserID     int        `option:"user_id"                                 required:"true"`
+	PNGSticker *InputFile `option:"png_sticker"                             required:"true"`
+}
+
+// ParamsCreateNewStickerSet represents parameters for CreateNewStickerSet method.
+type ParamsCreateNewStickerSet struct {
+	UserID       int           `option:"user_id"                            required:"true"`
+	Name         string        `option:"name"                               required:"true"`
+	Title        string        `option:"title"                              required:"true"`
+	PNGSticker   *InputFile    `option:"png_sticker"                        required:"true"`
+	Emojis       string        `option:"emojis"                             required:"true"`
+	ContainsMask bool          `option:"contains_masks"`
+	MaskPosition *MaskPosition `option:"mask_position"`
+}
+
+// ParamsAddStickerToSet represents parameters for AddStickerToSet method.
+type ParamsAddStickerToSet struct {
+	UserID       int           `option:"user_id"                            required:"true"`
+	Name         string        `option:"name"                               required:"true"`
+	PNGSticker   *InputFile    `option:"png_sticker"                        required:"true"`
+	Emojis       string        `option:"emojis"                             required:"true"`
+	MaskPosition *MaskPosition `option:"mask_position"`
+}
+
+// ParamsSetStickerPositionInSet represents parameters for SetStickerPositionInSet method.
+type ParamsSetStickerPositionInSet struct {
+	Sticker  string `option:"sticker"                                       required:"true"`
+	Position int    `option:"position"                                      required:"true"`
+}
+
+// ParamsDeleteStickerFromSet represents parameters for DeleteStickerFromSet method.
+type ParamsDeleteStickerFromSet struct {
+	Sticker string `option:"sticker"                                        required:"true"`
 }
 
 // API method option ChatIdentifier
