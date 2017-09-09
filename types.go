@@ -4,11 +4,16 @@ import "encoding/json"
 
 // Update represents an incoming update.
 type Update struct {
-	UpdateID          int      `json:"update_id"`
-	Message           *Message `json:"message"`
-	EditedMessage     *Message `json:"edited_message"`
-	ChannelPost       *Message `json:"channel_post"`
-	EditedChannelPost *Message `json:"edited_channel_post"`
+	UpdateID           int                 `json:"update_id"`
+	Message            *Message            `json:"message"`
+	EditedMessage      *Message            `json:"edited_message"`
+	ChannelPost        *Message            `json:"channel_post"`
+	EditedChannelPost  *Message            `json:"edited_channel_post"`
+	InlineQuery        *InlineQuery        `json:"inline_query"`
+	ChosenInlineResult *ChosenInlineResult `json:"chosen_inline_result"`
+	CallbackQuery      *CallbackQuery      `json:"callback_query"`
+	ShippingQuery      *ShippingQuery      `json:"shipping_query"`
+	PreCheckoutQuery   *PreCheckoutQuery   `json:"pre_checkout_query"`
 }
 
 // Message represents a message.
@@ -312,6 +317,58 @@ type KeyboardButton struct {
 	Text            string `json:"text"`
 	RequestContact  bool   `json:"request_contact"`
 	RequestLocation bool   `json:"request_location"`
+}
+
+// InlineQuery represents an incoming inline query.
+// When the user sends an empty query, your bot could return some default or trending results.
+type InlineQuery struct {
+	ID       string    `json:"id"`
+	From     *User     `json:"from"`
+	Location *Location `json:"location"`
+	Query    string    `json:"query"`
+	Offset   string    `json:"offset"`
+}
+
+// ChosenInlineResult represents a result of an inline query
+// that was chosen by the user and sent to their chat partner.
+type ChosenInlineResult struct {
+	ResultID        string    `json:"result_id"`
+	From            *User     `json:"from"`
+	Location        *Location `json:"location"`
+	InlineMessageID string    `json:"inline_message_id"`
+	Query           string    `json:"query"`
+}
+
+// CallbackQuery represents an incoming callback query from a callback button
+// in an inline keyboard. If the button that originated the query was attached
+// to a message sent by the bot, the field message will be present.
+type CallbackQuery struct {
+	ID              string   `json:"id"`
+	From            *User    `json:"from"`
+	Message         *Message `json:"message"`
+	InlineMessageID string   `json:"inline_message_id"`
+	ChatInstance    string   `json:"chat_instance"`
+	Data            string   `json:"data"`
+	GameShortName   string   `json:"game_short_name"`
+}
+
+// ShippingQuery represents a shipping address.
+type ShippingQuery struct {
+	ID              string           `json:"id"`
+	From            *User            `json:"from"`
+	InvoicePayload  string           `json:"invoice_payload"`
+	ShippingAddress *ShippingAddress `json:"shipping_address"`
+}
+
+// PreCheckoutQuery represents information about an incoming pre-checkout query.
+type PreCheckoutQuery struct {
+	ID               string     `json:"id"`
+	From             *User      `json:"from"`
+	Currency         string     `json:"currency"`
+	TotalAmount      int        `json:"total_amount"`
+	InvoicePayload   string     `json:"invoice_payload"`
+	ShippingOptionID string     `json:"shipping_option_id"`
+	OrderInfo        *OrderInfo `json:"order_info"`
 }
 
 type apiResponse struct {
