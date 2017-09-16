@@ -24,8 +24,6 @@ func sendResuest(method string, apiKey string, paramsObject interface{}, t inter
 }
 
 func _sendResuest(method string, apiKey string, paramsObject interface{}, t interface{}) error {
-	parameters, err := extractParams(paramsObject)
-
 	var requestBytes bytes.Buffer
 	var writer = multipart.NewWriter(&requestBytes)
 	var withParameters = false
@@ -42,6 +40,7 @@ func _sendResuest(method string, apiKey string, paramsObject interface{}, t inte
 		withParameters = true
 	}
 
+	parameters, err := extractParams(paramsObject)
 	for key, value := range parameters {
 		if param, ok := value.(string); ok {
 			addStringParameter(key, param)
@@ -134,31 +133,20 @@ func extractParams(paramsObject interface{}) (map[string]interface{}, error) {
 			if len(v) > 0 {
 				extractedValue = v
 			}
-		case *ChatIdentifier:
-			if v != nil {
-				extractedValue = v.Get()
-			}
-		case *ParseMode:
-			if v != nil {
-				extractedValue = v.Get()
-			}
-		case *ChatAction:
-			if v != nil {
-				extractedValue = v.Get()
-			}
-		case *ReplyMarkup:
-			if v != nil {
-				extractedValue = v.Get()
-			}
 		case *InputFile:
 			if v != nil {
 				extractedValue = v
+			}
+		case StringParam:
+			if !reflect.ValueOf(v).IsNil() {
+				extractedValue = v.get()
 			}
 		}
 
 		if extractedValue != nil {
 			result[option] = extractedValue
 		} else if len(field.Tag.Get("required")) != 0 {
+			// TODO: Display all missing options
 			return result, errors.New("Missing required option (" + option + ")")
 		}
 	}
