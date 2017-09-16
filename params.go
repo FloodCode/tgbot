@@ -332,6 +332,11 @@ type ParamsDeleteStickerFromSet struct {
 	Sticker string `option:"sticker"                                        required:"true"`
 }
 
+// StringParam is an interface for string method parameters
+type StringParam interface {
+	get() string
+}
+
 // API method option ChatIdentifier
 
 // ChatIdentifier represents unique identifier of chat.
@@ -340,7 +345,7 @@ type ChatIdentifier struct {
 }
 
 // Get returns string representation of chat ID.
-func (c *ChatIdentifier) Get() string {
+func (c *ChatIdentifier) get() string {
 	return c.chatID
 }
 
@@ -366,7 +371,7 @@ type ParseMode struct {
 }
 
 // Get returns string representation of parse mode.
-func (p *ParseMode) Get() string {
+func (p *ParseMode) get() string {
 	return p.parseMode
 }
 
@@ -388,8 +393,57 @@ type ReplyMarkup struct {
 }
 
 // Get returns markup data in JSON format.
-func (m *ReplyMarkup) Get() interface{} {
+func (m *ReplyMarkup) get() string {
 	return m.markup
+}
+
+// InlineKeyboardMarkup represents an inline keyboard that appears right next to the message it belongs to.
+func InlineKeyboardMarkup(inlineKeyboard [][]InlineKeyboardButton) *ReplyMarkup {
+	keyboardJSON, _ := json.Marshal(inlineKeyboard)
+	return &ReplyMarkup{markup: `{"inline_keyboard":` + string(keyboardJSON) + `}`}
+}
+
+// ReplyKeyboardMarkup represents a custom keyboard with reply options.
+func ReplyKeyboardMarkup(keyboard [][]KeyboardButton, resizekeyboard, oneTimeKeyboard, selective bool) *ReplyMarkup {
+	keyboardJSON, _ := json.Marshal(keyboard)
+	resultJSON := `{"keyboard":` + string(keyboardJSON)
+
+	if resizekeyboard {
+		resultJSON += `,"resize_keyboard":true`
+	}
+
+	if oneTimeKeyboard {
+		resultJSON += `,"one_time_keyboard":true`
+	}
+
+	if selective {
+		resultJSON += `,"selective":true`
+	}
+
+	resultJSON += `}`
+	return &ReplyMarkup{markup: resultJSON}
+}
+
+// ReplyKeyboardRemove represents reply markup with removal option.
+func ReplyKeyboardRemove() *ReplyMarkup {
+	return &ReplyMarkup{markup: `{"remove_keyboard":true}`}
+}
+
+// ReplyKeyboardRemoveSelective represents reply markup with selective removal option.
+func ReplyKeyboardRemoveSelective() *ReplyMarkup {
+	return &ReplyMarkup{markup: `{"remove_keyboard":true,"selective":true}`}
+}
+
+// ForceReply shows reply interface to user,
+// as if they manually selected the bot‘s message and tapped ’Reply'.
+func ForceReply() *ReplyMarkup {
+	return &ReplyMarkup{markup: `{"force_reply":true}`}
+}
+
+// ForceReplySelective selectively shows reply interface to user,
+// as if they manually selected the bot‘s message and tapped ’Reply'.
+func ForceReplySelective() *ReplyMarkup {
+	return &ReplyMarkup{markup: `{"force_reply":true,"selective":true}`}
 }
 
 // API method option InputFile
@@ -443,7 +497,7 @@ type ChatAction struct {
 }
 
 // Get returns string representation of chat action.
-func (p *ChatAction) Get() string {
+func (p *ChatAction) get() string {
 	return p.action
 }
 
@@ -480,40 +534,4 @@ func ChatActionFindLocation() *ChatAction {
 // ChatActionUploadVideoNote creates ChatAction with "upload_video_note" option.
 func ChatActionUploadVideoNote() *ChatAction {
 	return &ChatAction{action: "upload_video_note"}
-}
-
-// Reply markup
-
-// InlineKeyboardMarkup represents an inline keyboard that appears right next to the message it belongs to.
-func InlineKeyboardMarkup(inlineKeyboard [][]InlineKeyboardButton) *ReplyMarkup {
-	result, _ := json.Marshal(inlineKeyboard)
-	return &ReplyMarkup{markup: `{"inline_keyboard":` + string(result) + `}`}
-}
-
-// ReplyKeyboardMarkup represents a custom keyboard with reply options.
-func ReplyKeyboardMarkup(keyboard [][]KeyboardButton) *ReplyMarkup {
-	result, _ := json.Marshal(keyboard)
-	return &ReplyMarkup{markup: `{"keyboard":` + string(result) + `}`}
-}
-
-// ReplyKeyboardRemove represents reply markup with removal option.
-func ReplyKeyboardRemove() *ReplyMarkup {
-	return &ReplyMarkup{markup: `{"remove_keyboard":true}`}
-}
-
-// ReplyKeyboardRemoveSelective represents reply markup with selective removal option.
-func ReplyKeyboardRemoveSelective() *ReplyMarkup {
-	return &ReplyMarkup{markup: `{"remove_keyboard":true,"selective":true}`}
-}
-
-// ForceReply shows reply interface to user,
-// as if they manually selected the bot‘s message and tapped ’Reply'.
-func ForceReply() *ReplyMarkup {
-	return &ReplyMarkup{markup: `{"force_reply":true}`}
-}
-
-// ForceReplySelective selectively shows reply interface to user,
-// as if they manually selected the bot‘s message and tapped ’Reply'.
-func ForceReplySelective() *ReplyMarkup {
-	return &ReplyMarkup{markup: `{"force_reply":true,"selective":true}`}
 }

@@ -48,7 +48,7 @@ func (b *TelegramBot) Poll() {
 
 // GetMe returns basic information about the bot.
 func (b TelegramBot) GetMe() (user User, err error) {
-	return user, b.sendResuest("getme", nil, &user)
+	return user, b.sendResuest("getMe", nil, &user)
 }
 
 // GetUpdates allows to get new updates.
