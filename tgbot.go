@@ -13,14 +13,20 @@ type TelegramBot struct {
 }
 
 // New returns a new TelegramBot instance.
-func New(apiKey string) TelegramBot {
+func New(apiKey string) (TelegramBot, error) {
 	var bot = TelegramBot{
 		apiKey:          apiKey,
 		poolDelay:       100,
 		lastUpdateID:    -1,
 		updatesCallback: func([]Update) {},
 	}
-	return bot
+
+	_, err := bot.GetMe()
+	if err != nil {
+		return TelegramBot{}, err
+	}
+
+	return bot, nil
 }
 
 // SetPollDelay used to specify updates polling delay.
