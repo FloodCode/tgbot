@@ -31,16 +31,16 @@ type Message struct {
 	EditDate              int                `json:"edit_date"`
 	AuthorSignature       string             `json:"author_signature"`
 	Text                  string             `json:"text"`
-	Entities              *[]MessageEntity   `json:"entities"`
+	Entities              []*MessageEntity   `json:"entities"`
 	Audio                 *Audio             `json:"audio"`
 	Document              *Document          `json:"document"`
 	Game                  *Game              `json:"game"`
-	Photo                 *[]PhotoSize       `json:"photo"`
+	Photo                 []*PhotoSize       `json:"photo"`
 	Sticker               *Sticker           `json:"sticker"`
 	Video                 *Video             `json:"video"`
 	Voice                 *Voice             `json:"voice"`
 	VideoNote             *VideoNote         `json:"video_note"`
-	NewChatMembers        *[]User            `json:"new_chat_members"`
+	NewChatMembers        []*User            `json:"new_chat_members"`
 	Caption               string             `json:"caption"`
 	Contact               *Contact           `json:"contact"`
 	Location              *Location          `json:"location"`
@@ -48,7 +48,7 @@ type Message struct {
 	NewChatMember         *User              `json:"new_chat_member"`
 	LeftChatMember        *User              `json:"left_chat_member"`
 	NewChatTitle          string             `json:"new_chat_title"`
-	NewChatPhoto          *[]PhotoSize       `json:"new_chat_photo"`
+	NewChatPhoto          []*PhotoSize       `json:"new_chat_photo"`
 	DeleteChatPhoto       bool               `json:"delete_chat_photo"`
 	GroupChatCreated      bool               `json:"group_chat_created"`
 	SupergroupChatCreated bool               `json:"supergroup_chat_created"`
@@ -133,7 +133,7 @@ type Game struct {
 	Description  string           `json:"description"`
 	Photo        *PhotoSize       `json:"photo"`
 	Text         string           `json:"text"`
-	TextEntities *[]MessageEntity `json:"text_entities"`
+	TextEntities []*MessageEntity `json:"text_entities"`
 	Animation    *Animation       `json:"animation"`
 }
 
@@ -163,7 +163,7 @@ type StickerSet struct {
 	Name          string     `json:"name"`
 	Title         string     `json:"title"`
 	ContainsMasks bool       `json:"contains_masks"`
-	Stickers      *[]Sticker `json:"stickers"`
+	Stickers      []*Sticker `json:"stickers"`
 }
 
 // MaskPosition describes the position on faces where a mask should be placed by default.
@@ -266,7 +266,7 @@ type ShippingAddress struct {
 // UserProfilePhotos represents a user's profile pictures.
 type UserProfilePhotos struct {
 	TotalCount int            `json:"total_count"`
-	Photos     *[][]PhotoSize `json:"photos"`
+	Photos     [][]*PhotoSize `json:"photos"`
 }
 
 // File represents a file ready to be downloaded.
