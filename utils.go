@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io/ioutil"
 	"mime/multipart"
 	"net/http"
@@ -15,12 +14,7 @@ import (
 var httpClient = &http.Client{}
 
 func sendResuest(method string, apiKey string, paramsObject interface{}, t interface{}) error {
-	err := _sendResuest(method, apiKey, paramsObject, t)
-	if err != nil {
-		logRequestError(err, method, paramsObject)
-	}
-
-	return err
+	return _sendResuest(method, apiKey, paramsObject, t)
 }
 
 func _sendResuest(method string, apiKey string, paramsObject interface{}, t interface{}) error {
@@ -152,8 +146,4 @@ func extractParams(paramsObject interface{}) (map[string]interface{}, error) {
 	}
 
 	return result, nil
-}
-
-func logRequestError(err error, method string, parameters interface{}) {
-	fmt.Println("Request error:", err)
 }
