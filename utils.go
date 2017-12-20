@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 var httpClient = &http.Client{}
@@ -39,11 +40,11 @@ func _sendResuest(method string, apiKey string, paramsObject interface{}, t inte
 		if param, ok := value.(string); ok {
 			addStringParameter(key, param)
 		} else if param, ok := value.(*InputFile); ok {
-			fileData := param.Get()
+			fileData := param.getData()
 			if stringData, ok := fileData.(string); ok {
 				addStringParameter(key, stringData)
 			} else if bytesData, ok := fileData.([]byte); ok {
-				addFileParameter(key, bytesData, param.GetFilename())
+				addFileParameter(key, bytesData, param.getFilename())
 			}
 		} else if param, ok := value.([]byte); ok {
 			addFileParameter(key, param, "file")
@@ -54,7 +55,7 @@ func _sendResuest(method string, apiKey string, paramsObject interface{}, t inte
 
 	request, err := http.NewRequest("POST", "https://api.telegram.org/bot"+apiKey+"/"+method, &requestBytes)
 	if err != nil {
-		return errors.New("Unable to create request with given parameters")
+		return errors.New("unable to create request with given parameters")
 	}
 
 	if withParameters {
@@ -63,29 +64,29 @@ func _sendResuest(method string, apiKey string, paramsObject interface{}, t inte
 
 	response, err := httpClient.Do(request)
 	if err != nil {
-		return errors.New("Unable to execute request with given parameters")
+		return errors.New("unable to execute request with given parameters")
 	}
 
 	defer response.Body.Close()
 
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
-		return errors.New("Unable to read response body")
+		return errors.New("unable to read response body")
 	}
 
 	var apiResponse = apiResponse{}
 	err = json.Unmarshal(body, &apiResponse)
 	if err != nil {
-		return errors.New("Unable to unserialize response from server")
+		return errors.New("unable to unserialize response from server")
 	}
 
 	if apiResponse.Ok != true {
-		return errors.New("API request error. Description: " + apiResponse.Description)
+		return errors.New(apiResponse.Description)
 	}
 
 	err = json.Unmarshal(apiResponse.Result, &t)
 	if err != nil {
-		return errors.New("Unable to unserialize API result")
+		return errors.New("unable to unserialize API result")
 	}
 
 	return nil
@@ -131,19 +132,42 @@ func extractParams(paramsObject interface{}) (map[string]interface{}, error) {
 			if v != nil {
 				extractedValue = v
 			}
-		case StringParam:
+		case stringConfig:
 			if !reflect.ValueOf(v).IsNil() {
-				extractedValue = v.get()
+				extractedValue = v.getString()
 			}
+		case []InlineQueryResult:
+			serializedQueryResults := []string{}
+			for _, queryResult := range v {
+				queryResultJSON := buildInlineQueryResult(queryResult, queryResult.getType())
+				serializedQueryResults = append(serializedQueryResults, queryResultJSON)
+			}
+			extractedValue = "[" + strings.Join(serializedQueryResults, ",") + "]"
 		}
 
 		if extractedValue != nil {
 			result[option] = extractedValue
-		} else if len(field.Tag.Get("required")) != 0 {
-			// TODO: Display all missing options
-			return result, errors.New("Missing required option (" + option + ")")
 		}
 	}
 
 	return result, nil
+}
+
+func buildInlineQueryResult(queryResult InlineQueryResult, resultType string) string {
+	queryResultMap := map[string]interface{}{"type": resultType}
+	reflectType := reflect.TypeOf(queryResult)
+	reflectValue := reflect.ValueOf(queryResult)
+
+	for i := 0; i < reflectType.NumField(); i++ {
+		field := reflectType.Field(i)
+		if jsonAttribute, ok := field.Tag.Lookup("json"); ok {
+			val := reflectValue.FieldByName(field.Name).Interface()
+			if val != reflect.Zero(reflect.TypeOf(val)).Interface() {
+				queryResultMap[jsonAttribute] = val
+			}
+		}
+	}
+
+	queryResultJSON, _ := json.Marshal(queryResultMap)
+	return string(queryResultJSON)
 }
