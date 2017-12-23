@@ -15,10 +15,6 @@ import (
 var httpClient = &http.Client{}
 
 func sendResuest(method string, apiKey string, paramsObject interface{}, t interface{}) error {
-	return _sendResuest(method, apiKey, paramsObject, t)
-}
-
-func _sendResuest(method string, apiKey string, paramsObject interface{}, t interface{}) error {
 	var requestBytes bytes.Buffer
 	var writer = multipart.NewWriter(&requestBytes)
 	var withParameters = false
