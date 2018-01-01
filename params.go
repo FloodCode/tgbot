@@ -17,6 +17,14 @@ type GetUpdatesConfig struct {
 	Timeout int `option:"timeout"`
 }
 
+// SetWebhookConfig represents parameters for SetWebhook method
+type SetWebhookConfig struct {
+	URL            string     `option:"url"`
+	Certificate    *InputFile `option:"certificate"`
+	MaxConnections int        `option:"max_connections"`
+	AllowedUpdates []string   `option:"allowed_updates"`
+}
+
 // SendMessageConfig represents parameters for SendMessage method
 type SendMessageConfig struct {
 	ChatID                *ChatIdentifier `option:"chat_id"`
