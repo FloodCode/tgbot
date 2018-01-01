@@ -82,8 +82,8 @@ func getRequestBuffer(params map[string]interface{}) (buffer *bytes.Buffer, cont
 	}
 
 	for key, value := range params {
-		if param, ok := value.(string); ok {
-			addStringParameter(key, param)
+		if str, ok := value.(string); ok {
+			addStringParameter(key, str)
 		} else if param, ok := value.(*InputFile); ok {
 			fileData := param.getData()
 			if stringData, ok := fileData.(string); ok {
@@ -91,8 +91,6 @@ func getRequestBuffer(params map[string]interface{}) (buffer *bytes.Buffer, cont
 			} else if bytesData, ok := fileData.([]byte); ok {
 				addFileParameter(key, bytesData, param.getFilename())
 			}
-		} else if param, ok := value.([]byte); ok {
-			addFileParameter(key, param, "file")
 		}
 	}
 
@@ -136,6 +134,9 @@ func extractParams(config interface{}) map[string]interface{} {
 			extractedValue = v
 		case stringConfig:
 			extractedValue = v.getString()
+		case []string:
+			jsonBytes, _ := json.Marshal(v)
+			extractedValue = string(jsonBytes)
 		case []InlineQueryResult:
 			serializedQueryResults := []string{}
 			for _, queryResult := range v {

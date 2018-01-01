@@ -1,27 +1,32 @@
 package tgbot
 
 import (
+	"encoding/json"
+	"fmt"
+	"net/http"
 	"time"
 )
 
 // TelegramBot allows to interact with Telegram Bot API
 type TelegramBot struct {
-	apiKey          string
-	poolDelay       int
-	lastUpdateID    int
-	updatesCallback func([]Update)
+	apiKey       string
+	lastUpdateID int
 }
 
 // New returns a new TelegramBot instance
 func New(apiKey string) (TelegramBot, error) {
+	var err error
 	var bot = TelegramBot{
-		apiKey:          apiKey,
-		poolDelay:       100,
-		lastUpdateID:    -1,
-		updatesCallback: func([]Update) {},
+		apiKey:       apiKey,
+		lastUpdateID: -1,
 	}
 
-	_, err := bot.GetMe()
+	_, err = bot.GetMe()
+	if err != nil {
+		return TelegramBot{}, err
+	}
+
+	_, err = bot.DeleteWebhook()
 	if err != nil {
 		return TelegramBot{}, err
 	}
@@ -29,27 +34,60 @@ func New(apiKey string) (TelegramBot, error) {
 	return bot, nil
 }
 
-// SetPollDelay used to specify updates polling delay
-func (b *TelegramBot) SetPollDelay(delay int) {
-	b.poolDelay = delay
-}
-
-// SetUpdatesCallback used to specify callback for new updates
-func (b *TelegramBot) SetUpdatesCallback(callback func([]Update)) {
-	b.updatesCallback = callback
+// PollConfig represents bot's polling configuration
+type PollConfig struct {
+	Callback func([]Update)
+	Delay    int
 }
 
 // Poll starts updates polling
-func (b *TelegramBot) Poll() {
-	for true {
+func (b *TelegramBot) Poll(config PollConfig) error {
+	for {
 		var updates, err = b.GetUpdates(GetUpdatesConfig{Offset: b.lastUpdateID + 1})
 		if err == nil && len(updates) != 0 {
 			b.lastUpdateID = updates[len(updates)-1].UpdateID
-			go b.updatesCallback(updates)
+			go config.Callback(updates)
 		}
 
-		time.Sleep(time.Duration(b.poolDelay) * time.Millisecond)
+		time.Sleep(time.Duration(config.Delay) * time.Millisecond)
 	}
+}
+
+// ListenConfig represents bot's webhook configuration
+type ListenConfig struct {
+	Callback       func([]Update)
+	Host           string
+	Port           uint16
+	KeyFilename    string
+	CertFilename   string
+	MaxConnections int
+	AllowedUpdates []string
+}
+
+// Listen starts HTTPS server to receive updates
+func (b *TelegramBot) Listen(config ListenConfig) error {
+	http.HandleFunc("/"+b.apiKey, func(w http.ResponseWriter, req *http.Request) {
+		var update Update
+		err := json.NewDecoder(req.Body).Decode(&update)
+		if err != nil {
+			return
+		}
+
+		defer req.Body.Close()
+		config.Callback([]Update{update})
+	})
+
+	_, err := b.SetWebhook(SetWebhookConfig{
+		URL:            fmt.Sprintf("https://%s:%d/%s", config.Host, config.Port, b.apiKey),
+		Certificate:    FilePath(config.CertFilename),
+		AllowedUpdates: config.AllowedUpdates,
+	})
+
+	if err != nil {
+		return err
+	}
+
+	return http.ListenAndServeTLS(fmt.Sprintf(":%d", config.Port), config.CertFilename, config.KeyFilename, nil)
 }
 
 // GetMe returns basic information about the bot
@@ -60,6 +98,21 @@ func (b TelegramBot) GetMe() (user User, err error) {
 // GetUpdates allows to get new updates
 func (b TelegramBot) GetUpdates(config GetUpdatesConfig) (updates []Update, err error) {
 	return updates, b.sendResuest("getUpdates", config, &updates)
+}
+
+// SetWebhook used to specify url and receive incoming updates via an outgoing webhook
+func (b TelegramBot) SetWebhook(config SetWebhookConfig) (success bool, err error) {
+	return success, b.sendResuest("setWebhook", config, &success)
+}
+
+// DeleteWebhook used to remove webhook integration
+func (b TelegramBot) DeleteWebhook() (success bool, err error) {
+	return success, b.sendResuest("deleteWebhook", nil, &success)
+}
+
+// GetWebhookInfo user to get current webhook status
+func (b TelegramBot) GetWebhookInfo() (info WebhookInfo, err error) {
+	return info, b.sendResuest("getWebhookInfo", nil, &info)
 }
 
 // SendMessage sends text message
