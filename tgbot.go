@@ -74,7 +74,7 @@ func (b *TelegramBot) Listen(config ListenConfig) error {
 		}
 
 		defer req.Body.Close()
-		config.Callback([]Update{update})
+		go config.Callback([]Update{update})
 	})
 
 	_, err := b.SetWebhook(SetWebhookConfig{
