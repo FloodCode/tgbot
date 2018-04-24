@@ -26,11 +26,6 @@ func New(apiKey string) (TelegramBot, error) {
 		return TelegramBot{}, err
 	}
 
-	_, err = bot.DeleteWebhook()
-	if err != nil {
-		return TelegramBot{}, err
-	}
-
 	return bot, nil
 }
 
@@ -42,6 +37,8 @@ type PollConfig struct {
 
 // Poll starts updates polling
 func (b *TelegramBot) Poll(config PollConfig) error {
+	b.DeleteWebhook()
+
 	for {
 		var updates, err = b.GetUpdates(GetUpdatesConfig{Offset: b.lastUpdateID + 1})
 		if err == nil && len(updates) != 0 {
