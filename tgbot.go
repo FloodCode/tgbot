@@ -308,9 +308,14 @@ func (b TelegramBot) DeleteStickerFromSet(config DeleteStickerFromSetConfig) (su
 	return success, b.sendResuest("deleteStickerFromSet", config, &success)
 }
 
-// AnswerInlineQuery allows to send answers to an inline query
+// AnswerInlineQuery allows to send answers to the inline query
 func (b TelegramBot) AnswerInlineQuery(config AnswerInlineQueryConfig) (success bool, err error) {
 	return success, b.sendResuest("answerInlineQuery", config, &success)
+}
+
+// AnswerCallbackQuery allows to send answers to callback query
+func (b TelegramBot) AnswerCallbackQuery(config AnswerCallbackQueryConfig) (success bool, err error) {
+	return success, b.sendResuest("answerCallbackQuery", config, &success)
 }
 
 func (b TelegramBot) sendResuest(method string, paramsObject interface{}, t interface{}) error {

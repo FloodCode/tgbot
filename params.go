@@ -351,6 +351,15 @@ type AnswerInlineQueryConfig struct {
 	SwitchPmParameter string              `option:"switch_pm_parameter"`
 }
 
+// AnswerCallbackQueryConfig represents parameters for AnswerCallbackQuery method
+type AnswerCallbackQueryConfig struct {
+	CallbackQueryID string `option:"callback_query_id"`
+	Text            string `option:"text"`
+	ShowAlert       bool   `option:"show_alert"`
+	URL             string `option:"url"`
+	CacheTime       int    `option:"cache_time"`
+}
+
 type stringConfig interface {
 	getString() string
 }
